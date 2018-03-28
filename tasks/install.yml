@@ -9,7 +9,7 @@
   when: redis_travis_ci is not defined
 
 - name: compile redis
-  command: make -j{{ ansible_processor_cores + 1 }}{{ ' 32bit' if redis_make_32bit|bool else '' }}
+  command: make -j{{ ansible_processor_cores|default(1) + 1 }}{{ ' 32bit' if redis_make_32bit|bool else '' }}
   args:
     chdir: /usr/local/src/redis-{{ redis_version }}
     creates: /usr/local/src/redis-{{ redis_version }}/src/redis-server
@@ -30,15 +30,21 @@
   changed_when: false
   register: user_exists
 
+- name: add redis group
+  group:
+    name: "{{ redis_group }}"
+    state: present
+  when: user_exists|failed
+
 - name: add redis user
   user:
     name: "{{ redis_user }}"
+    group: "{{ redis_group }}"
     comment: "Redis"
     home: "{{ redis_install_dir }}"
     shell: /bin/false
     system: yes
   when: user_exists|failed
-
 
 - name: create /var/run/redis
   file:
@@ -51,3 +57,15 @@
   args:
     chdir: /usr/local/src/redis-{{ redis_version }}
     creates: "{{ redis_install_dir }}/bin/redis-server"
+
+- name: list redis binaries to add to alternatives
+  command: ls -1 {{ redis_install_dir }}/bin
+  register: redis_binaries
+  changed_when: false
+
+- name: add redis binaries to alternatives
+  alternatives:
+    name: "{{ item }}"
+    path: "{{ redis_install_dir }}/bin/{{ item }}"
+    link: "/usr/bin/{{ item }}"
+  with_items: "{{ redis_binaries.stdout_lines }}"
