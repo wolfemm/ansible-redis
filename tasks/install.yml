@@ -34,7 +34,7 @@
   group:
     name: "{{ redis_group }}"
     state: present
-  when: user_exists|failed
+  when: user_exists is failed
 
 - name: add redis user
   user:
@@ -44,7 +44,7 @@
     home: "{{ redis_install_dir }}"
     shell: /bin/false
     system: yes
-  when: user_exists|failed
+  when: user_exists is failed
 
 - name: create /var/run/redis
   file:
@@ -69,3 +69,4 @@
     path: "{{ redis_install_dir }}/bin/{{ item }}"
     link: "/usr/bin/{{ item }}"
   with_items: "{{ redis_binaries.stdout_lines }}"
+  when: redis_binaries is succeeded

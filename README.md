@@ -1,6 +1,6 @@
 # ansible-redis
 
-[![Build Status](https://travis-ci.org/DavidWittman/ansible-redis.svg?branch=master)](https://travis-ci.org/DavidWittman/ansible-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-DavidWittman.redis-blue.svg?style=flat)](https://galaxy.ansible.com/detail#/role/730)
+[![Build Status](https://travis-ci.org/DavidWittman/ansible-redis.svg?branch=master)](https://travis-ci.org/DavidWittman/ansible-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-DavidWittman.redis-blue.svg?style=flat)](https://galaxy.ansible.com/davidwittman/redis)
 
  - Ansible 2.1+
  - Compatible with most versions of Ubuntu/Debian and RHEL/CentOS 6.x
@@ -21,7 +21,7 @@
 ## Installation
 
 ``` bash
-$ ansible-galaxy install DavidWittman.redis
+$ ansible-galaxy install davidwittman.redis
 ```
 
 ## Getting started
@@ -40,7 +40,7 @@ Deploying a single Redis server node is pretty trivial; just add the role to you
   vars:
     - redis_bind: 127.0.0.1
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 ```
 
 ``` bash
@@ -72,14 +72,14 @@ And here's the playbook:
 - name: configure the master redis server
   hosts: redis-master
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 
 - name: configure redis slaves
   hosts: redis-slave
   vars:
     - redis_slaveof: redis-master.example.com 6379
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 ```
 
 In this case, I'm assuming you have DNS records set up for redis-master.example.com, but that's not always the case. You can pretty much go crazy with whatever you need this to be set to. In many cases, I tell Ansible to use the eth1 IP address for the master. Here's a more flexible value for the sake of posterity:
@@ -121,14 +121,14 @@ Now, all we need to do is set the `redis_sentinel_monitors` variable to define t
 - name: configure the master redis server
   hosts: redis-master
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 
 - name: configure redis slaves
   hosts: redis-slave
   vars:
     - redis_slaveof: redis-master.example.com 6379
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 
 - name: configure redis sentinel nodes
   hosts: redis-sentinel
@@ -138,7 +138,7 @@ Now, all we need to do is set the `redis_sentinel_monitors` variable to define t
         host: redis-master.example.com
         port: 6379
   roles:
-    - DavidWittman.redis
+    - davidwittman.redis
 ```
 
 This will configure the Sentinel nodes to monitor the master we created above using the identifier `master01`. By default, Sentinel will use a quorum of 2, which means that at least 2 Sentinels must agree that a master is down in order for a failover to take place. This value can be overridden by setting the `quorum` key within your monitor definition. See the [Sentinel docs](http://redis.io/topics/sentinel) for more details.
@@ -158,7 +158,7 @@ When using Ansible 2.x, this role will verify the sha1 checksum of the download 
 - name: install redis on ansible 1.x and verify checksums
   hosts: all
   roles:
-    - role: DavidWittman.redis
+    - role: davidwittman.redis
       redis_version: 3.0.7
       redis_verify_checksum: true
       redis_checksum: "sha256:b2a791c4ea3bb7268795c45c6321ea5abcc24457178373e6a6e3be6372737f23"
@@ -189,7 +189,7 @@ Here is a list of all the default variables for this role, which are also availa
 ``` yml
 ---
 ## Installation options
-redis_version: 2.8.9
+redis_version: 2.8.24
 redis_install_dir: /opt/redis
 redis_dir: /var/lib/redis/{{ redis_port }}
 redis_download_url: "http://download.redis.io/releases/redis-{{ redis_version }}.tar.gz"
@@ -287,6 +287,7 @@ redis_sentinel: false
 redis_sentinel_dir: /var/lib/redis/sentinel_{{ redis_sentinel_port }}
 redis_sentinel_bind: 0.0.0.0
 redis_sentinel_port: 26379
+redis_sentinel_password: false
 redis_sentinel_pidfile: /var/run/redis/sentinel_{{ redis_sentinel_port }}.pid
 redis_sentinel_logfile: '""'
 redis_sentinel_syslog_ident: sentinel_{{ redis_sentinel_port }}
