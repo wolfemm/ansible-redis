@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/DavidWittman/ansible-redis.svg?branch=master)](https://travis-ci.org/DavidWittman/ansible-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-DavidWittman.redis-blue.svg?style=flat)](https://galaxy.ansible.com/davidwittman/redis)
 
- - Ansible 2.1+
+ - Ansible 2.4+
  - Compatible with most versions of Ubuntu/Debian and RHEL/CentOS 6.x
- 
+
 ## Contents
 
  1. [Installation](#installation)
@@ -145,6 +145,10 @@ This will configure the Sentinel nodes to monitor the master we created above us
 
 Along with the variables listed above, Sentinel has a number of its own configurables just as Redis server does. These are prefixed with `redis_sentinel_`, and are enumerated in the **Role Variables** section below.
 
+### Multiple role inclusions
+
+Should you need to execute the role several times, have a look at `test/test_all.yml` to see how to proceed. See [here](https://github.com/DavidWittman/ansible-redis/issues/133) and [here](https://github.com/DavidWittman/ansible-redis/issues/193) for context.
+
 
 ## Advanced Options
 
@@ -192,6 +196,7 @@ Here is a list of all the default variables for this role, which are also availa
 redis_version: 2.8.24
 redis_install_dir: /opt/redis
 redis_dir: /var/lib/redis/{{ redis_port }}
+redis_config_file_name: "{{ redis_port }}.conf"
 redis_download_url: "http://download.redis.io/releases/redis-{{ redis_version }}.tar.gz"
 # Set this to true to validate redis tarball checksum against vars/main.yml
 redis_verify_checksum: false
