@@ -2,6 +2,7 @@
 # sentinel_{{ redis_sentinel_port }}.conf
 
 daemonize {{ redis_daemonize }}
+protected-mode {{ redis_sentinel_protected_mode }}
 dir {{ redis_sentinel_dir }}
 pidfile {{ redis_sentinel_pidfile }}
 port {{ redis_sentinel_port }}
@@ -19,7 +20,11 @@ sentinel monitor {{ master.name }} {{ master.host }} {{ master.port }} {{ master
 sentinel {{ option|replace('_', '-') }} {{ master.name }} {{ master[option] }}
 {% endif %}
 {% endfor -%}
-
+{% if master['rename_commands'] is defined -%}
+{% for command in master['rename_commands'] -%}
+sentinel rename-command {{ master.name }} {{ command }}
+{% endfor -%}
+{% endif -%}
 {% endfor -%}
 
 logfile {{ redis_sentinel_logfile }}

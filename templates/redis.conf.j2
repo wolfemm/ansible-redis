@@ -2,6 +2,7 @@
 
 # General
 daemonize {{ redis_daemonize }}
+protected-mode {{ redis_protected_mode }}
 pidfile {{ redis_pidfile }}
 dir {{ redis_dir }}
 port {{ redis_port }}
@@ -100,3 +101,8 @@ client-output-buffer-limit slave {{ redis_client_output_buffer_limit_slave }}
 client-output-buffer-limit pubsub {{ redis_client_output_buffer_limit_pubsub }}
 hz {{ redis_hz }}
 aof-rewrite-incremental-fsync yes
+
+{% if redis_config_additional|length -%}
+# Additional
+{{ redis_config_additional -}}
+{% endif -%}

@@ -186,6 +186,10 @@ In this case the source archive is copied to the server over SSH rather than dow
 
 To build 32-bit binaries of Redis (which can be used for [memory optimization](https://redis.io/topics/memory-optimization)), set `redis_make_32bit: true`. This installs the necessary dependencies (x86 glibc) on RHEL/Debian/SuSE and sets the option '32bit' when running make.
 
+### Building with TLS support
+
+To build Redis with [TLS support](https://redis.io/topics/encryption) (Added in version `6`), set `redis_make_tls: true`. This requires OpenSSL development libraries (e.g. libssl-dev on Debian/Ubuntu).
+
 ## Role Variables
 
 Here is a list of all the default variables for this role, which are also available in defaults/main.yml. One of these days I'll format these into a table or something.
@@ -204,6 +208,8 @@ redis_verify_checksum: false
 redis_tarball: false
 # Set this to true to build 32-bit binaries of Redis
 redis_make_32bit: false
+# Set this to true to build redis with TLS support, available only for versions >= 6 (require OpenSSL development libraries)
+redis_make_tls: false
 
 redis_user: redis
 redis_group: "{{ redis_user }}"
@@ -222,7 +228,7 @@ redis_local_facts: true
 redis_service_name: "redis_{{ redis_port }}"
 
 ## Networking/connection options
-redis_bind: 0.0.0.0
+redis_bind: false
 redis_port: 6379
 redis_password: false
 # Slave replication options
@@ -286,6 +292,13 @@ redis_auto_aof_rewrite_percentage: "100"
 redis_auto_aof_rewrite_min_size: "64mb"
 redis_notify_keyspace_events: '""'
 
+## Additional configuration options
+# leave empty if not required. Use a block style scalar to add options, e.g.
+# redis_config_additional: |
+#   io-threads 4
+#   io-threads-do-reads yes
+redis_config_additional: ""
+
 ## Redis sentinel configs
 # Set this to true on a host to configure it as a Sentinel
 redis_sentinel: false
@@ -307,7 +320,7 @@ redis_sentinel_monitors:
     failover_timeout: 180000
     notification_script: false
     client_reconfig_script: false
-
+    rename_commands: []
 ```
 
 ## Facts
