@@ -16,7 +16,7 @@ describe 'Redis' do
     its(:content) { should match /port 6379/ }
   end
 
-  describe file('/var/run/redis/6379.pid') do
+  describe file('/run/redis/6379.pid') do
     it { should be_file }
     it { should be_owned_by 'redis' }
     its(:size) { should > 0 }

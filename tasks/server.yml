@@ -85,7 +85,7 @@
     owner: "{{ redis_user }}"
     group: "{{ redis_group }}"
   when: redis_logfile != '""'
-  
+
 - name: update permissions of log file if needed
   file:
     state: file

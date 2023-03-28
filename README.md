@@ -262,7 +262,7 @@ redis_syslog_facility: USER
 
 ## General configuration
 redis_daemonize: "yes"
-redis_pidfile: /var/run/redis/{{ redis_port }}.pid
+redis_pidfile: /run/redis/{{ redis_port }}.pid
 # Number of databases to allow
 redis_databases: 16
 redis_loglevel: notice
@@ -306,7 +306,7 @@ redis_sentinel_dir: /var/lib/redis/sentinel_{{ redis_sentinel_port }}
 redis_sentinel_bind: 0.0.0.0
 redis_sentinel_port: 26379
 redis_sentinel_password: false
-redis_sentinel_pidfile: /var/run/redis/sentinel_{{ redis_sentinel_port }}.pid
+redis_sentinel_pidfile: /run/redis/sentinel_{{ redis_sentinel_port }}.pid
 redis_sentinel_logfile: '""'
 redis_sentinel_syslog_ident: sentinel_{{ redis_sentinel_port }}
 redis_sentinel_monitors:
